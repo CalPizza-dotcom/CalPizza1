@@ -1,0 +1,547 @@
+<!DOCTYPE html>    
+<html lang="it">    
+<head>    
+  <meta charset="UTF-8" />    
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />    
+  <title>🍕 Master Pizza Calculator</title>    
+  <!-- Google Fonts -->    
+  <link rel="preconnect" href="https://fonts.googleapis.com">    
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>    
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">    
+      
+  <style>    
+    :root {    
+      --primary: #FF5722;    
+      --primary-dark: #E64A19;    
+      --secondary: #FFC107;    
+      --bg: #FFF8F0;    
+      --card-bg: #FFFFFF;    
+      --text: #2C3E50;    
+      --accent-green: #4CAF50;    
+      --accent-blue: #2196F3;    
+      --shadow: 0 10px 25px rgba(255, 87, 34, 0.15);    
+      --radius: 20px;    
+    }    
+    
+    * {    
+      box-sizing: border-box;    
+      margin: 0;    
+      padding: 0;    
+    }    
+    
+    body {    
+      font-family: 'Nunito', sans-serif;    
+      background-color: var(--bg);    
+      color: var(--text);    
+      padding: 20px;    
+      min-height: 100vh;    
+      background-image: radial-gradient(#FFD180 1.5px, transparent 1.5px);    
+      background-size: 30px 30px;    
+    }    
+    
+    .container {    
+      max-width: 1100px;    
+      margin: 0 auto;    
+    }    
+    
+    /* Header Animato */    
+    header {    
+      text-align: center;    
+      margin-bottom: 30px;    
+      position: relative;    
+    }    
+    
+    header h1 {    
+      font-family: 'Fredoka', cursive;    
+      font-size: 2.8rem;    
+      color: var(--primary);    
+      text-shadow: 3px 3px 0px #FFD180;    
+      display: inline-flex;    
+      align-items: center;    
+      gap: 12px;    
+      animation: bounce 2s infinite alternate ease-in-out;    
+    }    
+    
+    @keyframes bounce {    
+      0% { transform: translateY(0); }    
+      100% { transform: translateY(-8px); }    
+    }    
+    
+    header p {    
+      font-weight: 700;    
+      color: #7A6855;    
+      margin-top: 5px;    
+    }    
+    
+    /* Layout a Griglia */    
+    .grid {    
+      display: grid;    
+      grid-template-columns: 1fr;    
+      gap: 25px;    
+    }    
+    
+    @media (min-width: 900px) {    
+      .grid {    
+        grid-template-columns: 1fr 1fr;    
+      }    
+    }    
+    
+    /* Cards */    
+    .card {    
+      background: var(--card-bg);    
+      border-radius: var(--radius);    
+      padding: 25px;    
+      box-shadow: var(--shadow);    
+      border: 3px solid #FFF0E0;    
+      transition: transform 0.3s ease, box-shadow 0.3s ease;    
+      position: relative;    
+      overflow: hidden;    
+    }    
+    
+    .card:hover {    
+      transform: translateY(-4px);    
+      box-shadow: 0 15px 30px rgba(255, 87, 34, 0.2);    
+    }    
+    
+    .card-title {    
+      font-family: 'Fredoka', cursive;    
+      font-size: 1.4rem;    
+      color: var(--primary);    
+      margin-bottom: 18px;    
+      display: flex;    
+      align-items: center;    
+      gap: 10px;    
+      border-bottom: 3px dashed #FFE0B2;    
+      padding-bottom: 8px;    
+    }    
+    
+    /* Form & Input Styles */    
+    .form-group {    
+      margin-bottom: 15px;    
+      display: flex;    
+      flex-direction: column;    
+      gap: 5px;    
+    }    
+    
+    .form-row {    
+      display: grid;    
+      grid-template-columns: 1fr 1fr;    
+      gap: 12px;
+      align-items: start; /* Assicura che partano allineati in alto */
+    }    
+    
+    /* CORREZIONE PER L'ALLINEAMENTO DEI RETTANGOLI SFALSATI */
+    .form-row .form-group label {
+      min-height: 42px; /* Forza un'altezza fissa comune per le label su due righe */
+      display: flex;
+      align-items: flex-end; /* Allinea il testo sul fondo dello spazio riservato */
+      line-height: 1.2;
+    }
+
+    label {    
+      font-weight: 700;    
+      font-size: 0.95rem;    
+      color: #4A3E3D;    
+    }    
+    
+    .hint {    
+      font-size: 0.8rem;    
+      color: #88786A;    
+      font-style: italic;    
+    }    
+    
+    input, select {    
+      width: 100%;    
+      padding: 10px 14px;    
+      border: 2px solid #FFE0B2;    
+      border-radius: 12px;    
+      font-family: 'Nunito', sans-serif;    
+      font-weight: 700;    
+      font-size: 1rem;    
+      color: var(--text);    
+      background-color: #FFFDF9;    
+      transition: border-color 0.2s, box-shadow 0.2s;    
+    }    
+    
+    input:focus, select:focus {    
+      outline: none;    
+      border-color: var(--primary);    
+      box-shadow: 0 0 0 4px rgba(255, 87, 34, 0.15);    
+    }    
+
+    /* Style Cursore Idratazione */
+    .range-container {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      height: 10px;
+      border-radius: 5px;
+      background: #FFE0B2;
+      outline: none;
+      padding: 0;
+      border: none;
+      cursor: pointer;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: var(--primary);
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+      transition: transform 0.1s;
+    }
+
+    input[type="range"]::-webkit-slider-thumb:hover {
+      transform: scale(1.15);
+    }
+    
+    /* Results Section */    
+    .results-card {    
+      background: linear-gradient(135deg, #FFF6F0 0%, #FFFDF9 100%);    
+      border: 3px solid #FFCC80;    
+    }    
+    
+    .result-item {    
+      display: flex;    
+      justify-content: space-between;    
+      align-items: center;    
+      padding: 10px 14px;    
+      margin-bottom: 8px;    
+      background: white;    
+      border-radius: 12px;    
+      border: 1px solid #FFE0B2;    
+      box-shadow: 0 2px 6px rgba(0,0,0,0.02);    
+      transition: transform 0.2s;    
+    }    
+    
+    .result-item:hover {    
+      transform: scale(1.02);    
+    }    
+    
+    .result-item .label {    
+      font-weight: 700;    
+    }    
+    
+    .result-item .val {    
+      font-family: 'Fredoka', cursive;    
+      font-size: 1.25rem;    
+      color: var(--primary);    
+    }    
+    
+    .highlight-box {    
+      background: #E3F2FD;    
+      border: 2px dashed #90CAF9;    
+      border-radius: 14px;    
+      padding: 15px;    
+      text-align: center;    
+      margin-top: 15px;    
+    }    
+    
+    .highlight-box .temp-val {    
+      font-family: 'Fredoka', cursive;    
+      font-size: 2rem;    
+      color: var(--accent-blue);    
+    }    
+  </style>    
+</head>    
+<body>    
+    
+  <div class="container">    
+    <header>    
+      <h1>🍕 Calcolatore Impasto Pizza</h1>    
+      <p>Calcola dosaggi, idratazione, temperature e condimenti in tempo reale!</p>    
+    </header>    
+    
+    <div class="grid">    
+      <!-- COLONNA 1: INPUT -->    
+      <div class="left-col">    
+        <!-- SEZIONE 1: INPUT GENERALI -->    
+        <div class="card">    
+          <div class="card-title">⚙️ 1. Parametri Impasto</div>    
+              
+          <div class="form-row">    
+            <div class="form-group">    
+              <label>Numero Panetti</label>    
+              <input type="number" id="numPanetti" value="10" min="1" />    
+            </div>    
+            <div class="form-group">    
+              <label>Peso Panetto (g)</label>    
+              <input type="number" id="pesoPanetto" value="270" step="5" />    
+            </div>    
+          </div>    
+    
+          <!-- IDRATAZIONE CON SLIDER E CASELLA -->
+          <div class="form-group">    
+            <label>Idratazione (%)</label>    
+            <div class="range-container">
+              <input type="range" id="idratazioneSlider" value="70" min="0" max="100" step="1" />    
+              <input type="number" id="idratazione" value="70" min="0" max="100" step="1" style="width: 90px; text-align: center;" />    
+            </div>
+            <span class="hint">Sostituisci con la % desiderata (es. 65%, 70%)</span>
+          </div>    
+    
+          <div class="form-row">    
+            <div class="form-group">    
+              <label>Sale / Litro Acqua (g)</label>    
+              <input type="number" id="saleLitro" value="43" step="1" />    
+              <span class="hint">Standard napoletana (tra 40g e 50g)</span>    
+            </div>    
+            <div class="form-group">    
+              <label>Olio su Farina (%)</label>    
+              <input type="number" id="olioPercent" value="0" step="0.5" />    
+              <span class="hint">0 per Napoletana, 0,02 per Teglia (2%)</span>    
+            </div>    
+          </div>
+
+          <div class="form-group">    
+            <label>Coeff. Macchina / Attrito (°C)</label>    
+            <input type="number" id="attrito" value="18" min="0" max="20" step="1" />    
+            <span class="hint">Valore da 0 a 20 (°C)</span>    
+          </div>    
+        </div>    
+    
+        <!-- SEZIONE 2: LIEVITAZIONE E FRIGO -->    
+        <div class="card" style="margin-top: 25px;">    
+          <div class="card-title">⏳ 2. Tempi e Temperature</div>    
+              
+          <div class="form-row">    
+            <div class="form-group">    
+              <label>Ore Temp. Ambiente</label>    
+              <input type="number" id="oreTA" value="7" step="0.5" />    
+            </div>    
+            <div class="form-group">    
+              <label>Temp. Ambiente (°C)</label>    
+              <input type="number" id="tempTA" value="25" step="0.5" />    
+            </div>    
+          </div>    
+    
+          <div class="form-row">    
+            <div class="form-group">    
+              <label>Ore Frigo</label>    
+              <input type="number" id="oreFrigo" value="13" step="1" />    
+            </div>    
+            <div class="form-group">    
+              <label>Temp. Frigo (°C)</label>    
+              <input type="number" id="tempFrigo" value="4" step="0.5" />    
+            </div>    
+          </div>    
+    
+          <div class="form-row">    
+            <div class="form-group">    
+              <label>Temp. Target Impasto (°C)</label>    
+              <input type="number" id="tempTarget" value="23" step="0.5" />    
+            </div>    
+            <div class="form-group">    
+              <label>Temp. Farina (°C)</label>    
+              <input type="number" id="tempFarina" value="24" step="0.5" />    
+            </div>    
+          </div>    
+        </div>    
+      </div>    
+    
+      <!-- COLONNA 2: RISULTATI -->    
+      <div class="right-col">    
+        <!-- RISULTATI PESI -->    
+        <div class="card results-card">    
+          <div class="card-title">📊 3. Ingredienti e Pesi</div>    
+              
+          <div class="result-item" style="border-left: 5px solid var(--primary);">    
+            <span class="label">Peso Impasto Totale</span>    
+            <span class="val" id="resPesoTotale">0 g</span>    
+          </div>    
+    
+          <div class="result-item">    
+            <span class="label">🌾 Farina Totale</span>    
+            <span class="val" id="resFarina">0 g</span>    
+          </div>    
+    
+          <div class="result-item">    
+            <span class="label">💧 Acqua Totale</span>    
+            <span class="val" id="resAcqua">0 g</span>    
+          </div>    
+    
+          <div class="result-item">    
+            <span class="label">🧂 Sale Totale</span>    
+            <span class="val" id="resSale">0 g</span>    
+          </div>    
+    
+          <div class="result-item">    
+            <span class="label">🫒 Olio EVO</span>    
+            <span class="val" id="resOlio">0 g</span>    
+          </div>    
+    
+          <div class="result-item">    
+            <span class="label">🧫 Lievito Fresco</span>    
+            <span class="val" id="resLievitoFresco">0 g</span>    
+          </div>    
+    
+          <div class="result-item">    
+            <span class="label">🍞 Lievito Secco</span>    
+            <span class="val" id="resLievitoSecco">0 g</span>    
+          </div>    
+    
+          <!-- TEMPERATURA ACQUA -->    
+          <div class="highlight-box">    
+            <div style="font-weight: 700; color: #1565C0;">🧊 Temperatura Calcolata dell'Acqua</div>    
+            <div class="temp-val" id="resTempAcqua">0 °C</div>    
+          </div>    
+        </div>    
+    
+        <!-- DOSAGGIO CONDIMENTI -->    
+        <div class="card" style="margin-top: 25px;">    
+          <div class="card-title">🍅 4. Condimenti (Pelati & Mozzarella)</div>    
+    
+          <div class="form-row">    
+            <div class="form-group">    
+              <label>Pomodoro / Pizza (g)</label>    
+              <input type="number" id="pomoSingolo" value="85" step="5" />    
+              <span class="hint">(Dose media standard) oppure 120-150g per teglia.</span>    
+            </div>    
+            <div class="form-group">    
+              <label>Mozzarella / Pizza (g)</label>    
+              <input type="number" id="mozzSingola" value="95" step="5" />    
+              <span class="hint">Grammi totali per pizze tonde</span>    
+            </div>    
+          </div>    
+    
+          <div class="result-item" style="margin-top: 10px;">    
+            <span class="label">🥫 Pelati Totali</span>    
+            <span class="val" id="resPelati">0 g</span>    
+          </div>    
+    
+          <div class="result-item">    
+            <span class="label">🧂 Sale per Pelati (1.1%)</span>    
+            <span class="val" id="resSalePelati">0 g</span>    
+          </div>    
+    
+          <div class="result-item">    
+            <span class="label">🧀 Mozzarella Totale</span>    
+            <span class="val" id="resMozzarella">0 g</span>    
+          </div>    
+        </div>    
+      </div>    
+    </div>    
+  </div>    
+    
+  <script>    
+    // Selezione elementi    
+    const numPanetti = document.getElementById('numPanetti');    
+    const pesoPanetto = document.getElementById('pesoPanetto');    
+    const idratazione = document.getElementById('idratazione');    
+    const idratazioneSlider = document.getElementById('idratazioneSlider');    
+    const saleLitro = document.getElementById('saleLitro');    
+    const olioPercent = document.getElementById('olioPercent');    
+    const attrito = document.getElementById('attrito');    
+        
+    const oreTA = document.getElementById('oreTA');    
+    const tempTA = document.getElementById('tempTA');    
+    const oreFrigo = document.getElementById('oreFrigo');    
+    const tempFrigo = document.getElementById('tempFrigo');    
+    const tempTarget = document.getElementById('tempTarget');    
+    const tempFarina = document.getElementById('tempFarina');    
+    
+    const pomoSingolo = document.getElementById('pomoSingolo');    
+    const mozzSingola = document.getElementById('mozzSingola');    
+    
+    // Selezione Output    
+    const resPesoTotale = document.getElementById('resPesoTotale');    
+    const resFarina = document.getElementById('resFarina');    
+    const resAcqua = document.getElementById('resAcqua');    
+    const resSale = document.getElementById('resSale');    
+    const resOlio = document.getElementById('resOlio');    
+    const resLievitoFresco = document.getElementById('resLievitoFresco');    
+    const resLievitoSecco = document.getElementById('resLievitoSecco');    
+    const resTempAcqua = document.getElementById('resTempAcqua');    
+    
+    const resPelati = document.getElementById('resPelati');    
+    const resSalePelati = document.getElementById('resSalePelati');    
+    const resMozzarella = document.getElementById('resMozzarella');    
+    
+    // Sincronizzazione Slider e Input Numerico per l'idratazione
+    idratazioneSlider.addEventListener('input', () => {
+      idratazione.value = idratazioneSlider.value;
+      calcola();
+    });
+
+    idratazione.addEventListener('input', () => {
+      idratazioneSlider.value = idratazione.value;
+      calcola();
+    });
+
+    function calcola() {    
+      const n = parseFloat(numPanetti.value) || 0;    
+      const p = parseFloat(pesoPanetto.value) || 0;    
+      const h = (parseFloat(idratazione.value) || 0) / 100;    
+      const sL = parseFloat(saleLitro.value) || 0;    
+      const oP = (parseFloat(olioPercent.value) || 0) / 100;    
+      const attr = parseFloat(attrito.value) || 0;    
+    
+      const tTA = parseFloat(tempTA.value) || 25;    
+      const tTarget = parseFloat(tempTarget.value) || 23;    
+      const tFarina = parseFloat(tempFarina.value) || 24;    
+    
+      // 1. Peso Totale Impasto    
+      const pesoTotale = n * p;    
+    
+      // 2. Farina, Acqua, Sale, Olio    
+      const denom = 1 + h + (h * (sL / 1000)) + oP;    
+      const farina = denom > 0 ? pesoTotale / denom : 0;    
+      const acqua = farina * h;    
+      const sale = (acqua / 1000) * sL;    
+      const olio = farina * oP;    
+    
+      // 3. Calcolo Lievito    
+      const oreF = parseFloat(oreFrigo.value) || 0;  
+      const oreTAval = parseFloat(oreTA.value) || 0;  
+      const oreTAEqFrigo = oreF * 0.1; 
+      const oreTotaliEq = oreTAval + oreTAEqFrigo; 
+        
+      const percLievito = 0.857 / (Math.pow(tTA, 1.2) * Math.pow(Math.max(oreTotaliEq, 1), 1.1));  
+      const lievitoFresco = farina * percLievito;  
+      const lievitoSecco = lievitoFresco / 4.2768; 
+    
+      // 4. Temperatura Acqua    
+      const tempAcqua = (3 * tTarget) - tTA - tFarina - attr;    
+    
+      // 5. Condimenti    
+      const pSingolo = parseFloat(pomoSingolo.value) || 0;    
+      const mSingola = parseFloat(mozzSingola.value) || 0;    
+      const pelatiTot = n * pSingolo;    
+      const salePelati = pelatiTot * 0.011;    
+      const mozzTot = n * mSingola;    
+    
+      // Output UI    
+      resPesoTotale.innerText = pesoTotale.toFixed(0) + ' g';    
+      resFarina.innerText = farina.toFixed(1) + ' g';    
+      resAcqua.innerText = acqua.toFixed(1) + ' g';    
+      resSale.innerText = sale.toFixed(1) + ' g';    
+      resOlio.innerText = olio.toFixed(1) + ' g';    
+      resLievitoFresco.innerText = lievitoFresco.toFixed(2) + ' g';    
+      resLievitoSecco.innerText = lievitoSecco.toFixed(2) + ' g';    
+    
+      resTempAcqua.innerText = tempAcqua.toFixed(1) + ' °C';    
+    
+      resPelati.innerText = pelatiTot.toFixed(0) + ' g';    
+      resSalePelati.innerText = salePelati.toFixed(2) + ' g';    
+      resMozzarella.innerText = mozzTot.toFixed(0) + ' g';    
+    }    
+    
+    // Event Listeners per gli altri campi
+    document.querySelectorAll('input:not(#idratazione):not(#idratazioneSlider), select').forEach(el => {    
+      el.addEventListener('input', calcola);    
+    });    
+    
+    // Calcolo iniziale    
+    calcola();    
+  </script>    
+</body>    
+</html>
